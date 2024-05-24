@@ -1,0 +1,22 @@
+name: PR Approval Notification
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  notify:
+    if: ${{ github.event.review.state == 'approved' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send approval notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.example.com
+          server_port: 587
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: 'Pull Request Approved'
+          body: 'A pull request has been approved: ${{ github.event.pull_request.html_url }}'
+          to: 'dados@incentiv.me'
+          from: 'dados@incentiv.me'
